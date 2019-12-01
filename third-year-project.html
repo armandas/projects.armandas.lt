@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>FPGA Based VGA Driver and Arcade Game &mdash; Armandas’s projects</title>
+
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="shortcut icon" href="static/c.ico"/>
+    <link rel="top" title="Armandas’s projects" href="index.html" />
+    <link rel="next" title="Fume extractor" href="fume-extractor.html" />
+    <link rel="prev" title="PCB Exposure Box" href="pcb-exposure-box.html" />
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="fume-extractor.html" title="Fume extractor"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="pcb-exposure-box.html" title="PCB Exposure Box"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Armandas’s projects</a> &raquo;</li>
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+
+  <div class="section" id="fpga-based-vga-driver-and-arcade-game">
+<span id="third-year-project"></span><h1>FPGA Based VGA Driver and Arcade Game<a class="headerlink" href="third-year-project.html#fpga-based-vga-driver-and-arcade-game" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">date:</th><td class="field-body">March 7, 2010</td>
+</tr>
+</tbody>
+</table>
+<p>During the third year at the university, students were doing their
+individual projects. Learning about FPGAs was on my TODO list, so I decided
+to propose my own project.</p>
+<p>After some consultation with PhD students and a lecturer a topic was chosen:
+VGA driver and an arcade game.</p>
+<img alt="images/arcade.gif" src="images/arcade.gif" />
+<div class="section" id="pong">
+<h2>Pong<a class="headerlink" href="third-year-project.html#pong" title="Permalink to this headline">¶</a></h2>
+<object width="480" height="385">
+    <param name="movie" value="http://www.youtube.com/v/IBhdHHIXBtY&amp;hl=en_GB&fs=1&amp;color1=0x2b405b&amp;color2=0x6b8ab6"></param>
+    <param name="allowFullScreen" value="true"></param>
+    <param name="allowscriptaccess" value="always"></param>
+    <embed src="http://www.youtube.com/v/IBhdHHIXBtY&amp;hl=en_GB&fs=1&amp;color1=0x2b405b&amp;color2=0x6b8ab6" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed>
+</object><p>The project was started with an implementation of the classic Pong game.
+The development of this game was pretty much a learning exercise and was
+deliberately kept simple.</p>
+<p>Main features:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Two player game</li>
+<li>Ball acceleration</li>
+<li>Score display and winner announcement</li>
+<li>Audio feedback</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="space-shooter">
+<h2>Space shooter<a class="headerlink" href="third-year-project.html#space-shooter" title="Permalink to this headline">¶</a></h2>
+<p>For the second part of the project, a space-shooter game was chosen. This
+time, the majority of effort was put to technical the side of the game. The
+following features were added:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Coloured and animated graphics</li>
+<li>Multi-tone sound generator</li>
+<li>NES controller interface</li>
+<li>Binary-to-BCD converter</li>
+<li>etc.</li>
+</ul>
+</div></blockquote>
+<img alt="http://farm3.static.flickr.com/2780/4412904401_de070b471c.jpg" src="http://farm3.static.flickr.com/2780/4412904401_de070b471c.jpg" />
+<p>The gameplay is quite simple. User controls the spaceship at the bottom.
+Aliens arrive in three rows, weakest at the front. Third level aliens can
+turn invisible and avoid missiles.</p>
+</div>
+<div class="section" id="nintendo-controller-interface">
+<h2>Nintendo controller interface<a class="headerlink" href="third-year-project.html#nintendo-controller-interface" title="Permalink to this headline">¶</a></h2>
+<p>I wanted to have some custom built hardware that I could interface to with
+the FPGA. At first, I thought I will build a controller, but in the end I
+decided that an old NES gamepad would look much better.</p>
+<p>Since the FPGA can handle 3.3V at most, and the gamepads need 5V, a logic
+level shifter was needed. For this purpose I decided to design a PCB.</p>
+<p>The conversion from 3.3V to 5V and from 5V to 3.3V is done by 74HCT4066 and
+74LCX125 respectively. NES sockets are hard to come by, so we had to buy a
+2-to-4 expander and scavenge the ports from it. A reset button and piezoelectric
+buzzer were also added to the board, which is connected to the development
+board using a Hirose FX2 expansion header.</p>
+<p>More details, including schematic and board layout can be found in the
+dissertation.</p>
+<p>
+    <a href="http://www.flickr.com/photos/armandas/4276602049/" title="NES adapter for Spartan-3E dev board by Armandas, on Flickr">
+        <img src="http://farm5.static.flickr.com/4067/4276602049_e12c061f24.jpg" width="500" height="333" alt="NES adapter for Spartan-3E dev board">
+    </a>
+</p><div class="figure">
+<img alt="images/adaptor.jpg" src="images/adaptor.jpg" />
+<p class="caption">Final adaptor board</p>
+</div>
+</div>
+<div class="section" id="links">
+<h2>Links<a class="headerlink" href="third-year-project.html#links" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul>
+<li><p class="first">Dissertation: <a class="reference external" href="../static/res/fpga_based_vga_driver_and_arcade_game.pdf">http://static/res/fpga_based_vga_driver_and_arcade_game.pdf</a></p>
+</li>
+<li><dl class="first docutils">
+<dt>Source</dt>
+<dd><ul class="first last simple">
+<li>Whole project: <a class="reference external" href="http://github.com/armandas/Arcade">http://github.com/armandas/Arcade</a></li>
+<li>Pong: <a class="reference external" href="http://github.com/armandas/Plong">http://github.com/armandas/Plong</a></li>
+<li>Space shooter: <a class="reference external" href="http://github.com/armandas/FPGalaxy">http://github.com/armandas/FPGalaxy</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="third-year-project.html#">FPGA Based VGA Driver and Arcade Game</a><ul>
+<li><a class="reference internal" href="third-year-project.html#pong">Pong</a></li>
+<li><a class="reference internal" href="third-year-project.html#space-shooter">Space shooter</a></li>
+<li><a class="reference internal" href="third-year-project.html#nintendo-controller-interface">Nintendo controller interface</a></li>
+<li><a class="reference internal" href="third-year-project.html#links">Links</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pcb-exposure-box.html"
+                        title="previous chapter">PCB Exposure Box</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fume-extractor.html"
+                        title="next chapter">Fume extractor</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/third-year-project.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="https://armandas.lt/projects/search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="fume-extractor.html" title="Fume extractor"
+             >next</a></li>
+        <li class="right" >
+          <a href="pcb-exposure-box.html" title="PCB Exposure Box"
+             >previous</a> |</li>
+        <li><a href="index.html">Armandas’s projects</a> &raquo;</li>
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Armandas Jarušauskas.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

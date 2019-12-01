@@ -1,0 +1,76 @@
+.. _robot-firmware:
+
+Line-following robot (firmware)
+===============================
+
+:date: May 28, 2009
+
+.. figure:: static/robot.jpg
+
+   Build reference picture
+
+This was a second-year Embedded Systems Application Project at university.
+We were given the hardware and after assembling the robot, had to write
+firmware for it. The PIC microcontroller programming was done in C.
+
+As it was the first time this course was run, objectives were not concrete
+and were updated as students progressed. Some of the objectives were:
+
+   * follow a line
+   * go over a ramp
+   * memorise a track
+
+Hardware
+--------
+
+At the centre of the board, we had a PIC 18F4450 microcontroller. The PIC
+was preprogrammed with a bootloader, which enabled programs to be loaded
+using only a USB cable.
+
+Five IR diode/photodiode pairs were used to detect a line. Sensitivity
+could be adjusted using a potentiometer to set a comparator treshold voltage.
+
+Two DC motors were driven by an L298 dual full-bridge driver IC. By pulling
+the inputs low or high, one can make motors spin forward or backwards.
+Turning left or right is done by spinning one of the wheels (slow turn),
+or by making them spin in different directions (fast turn).
+
+Six on-board LEDs were used for debugging and as a User Interface.
+
+Firmware
+--------
+
+The programming was done using MPLAB IDE and C18 compiler. Driver software,
+provided by Microchip, was used to load hex files onto the microcontroller.
+
+On top of fulfilling the objectives, a simple menu system was implemented.
+Using on-board switches and LED feedback, user could select one of the six
+different modes:
+
+   * Idle - to do nothing, flash LEDs
+   * Test - to output data from sensors to LEDs
+   * Normal - to follow the line
+   * Ramp - to go over the ramp
+   * Memorise - to memorise and replay
+   * Mode selection - this is the mode which is active until one of the above modes is confirmed
+
+Here is a short video of a test run as home:
+
+.. raw:: html
+
+   <object width="425" height="344">
+       <param name="movie" value="http://www.youtube.com/v/zx5pg2UBwsE&amp;hl=en&amp;fs=1"></param>
+       <param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param>
+       <embed src="http://www.youtube.com/v/zx5pg2UBwsE&amp;hl=en&amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed>
+   </object>
+
+.. figure:: http://lh4.ggpht.com/_is7PcgDfyqQ/Sh7x2mAbmcI/AAAAAAAAA50/oIXp8rZj8No/s400/ESAP_final_day-01.jpg
+
+   Track setup
+
+Links
+-----
+.. toctree::
+   :maxdepth: 1
+
+   Source code <robot-source>

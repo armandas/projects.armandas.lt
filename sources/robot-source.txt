@@ -1,0 +1,16 @@
+.. _robot-source:
+
+Line-following robot (firmware): source code
+============================================
+
+Return to :ref:`project description <robot-firmware>`.
+
+Download
+--------
+
+Download source: `robot.c <static/robot.c>`_.
+
+robot.c
+-----------
+.. literalinclude:: static/robot.c
+   :language: c

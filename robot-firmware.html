@@ -1,0 +1,191 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Line-following robot (firmware) &mdash; Armandas’s projects</title>
+
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="shortcut icon" href="static/c.ico"/>
+    <link rel="top" title="Armandas’s projects" href="index.html" />
+    <link rel="next" title="Line-following robot (firmware): source code" href="robot-source.html" />
+    <link rel="prev" title="7-segment LED display for Spartan-3E dev board" href="7seg-plugin.html" />
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="robot-source.html" title="Line-following robot (firmware): source code"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="7seg-plugin.html" title="7-segment LED display for Spartan-3E dev board"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Armandas’s projects</a> &raquo;</li>
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+
+  <div class="section" id="line-following-robot-firmware">
+<span id="robot-firmware"></span><h1>Line-following robot (firmware)<a class="headerlink" href="robot-firmware.html#line-following-robot-firmware" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">date:</th><td class="field-body">May 28, 2009</td>
+</tr>
+</tbody>
+</table>
+<div class="figure">
+<img alt="images/robot.jpg" src="images/robot.jpg" />
+<p class="caption">Build reference picture</p>
+</div>
+<p>This was a second-year Embedded Systems Application Project at university.
+We were given the hardware and after assembling the robot, had to write
+firmware for it. The PIC microcontroller programming was done in C.</p>
+<p>As it was the first time this course was run, objectives were not concrete
+and were updated as students progressed. Some of the objectives were:</p>
+<blockquote>
+<div><ul class="simple">
+<li>follow a line</li>
+<li>go over a ramp</li>
+<li>memorise a track</li>
+</ul>
+</div></blockquote>
+<div class="section" id="hardware">
+<h2>Hardware<a class="headerlink" href="robot-firmware.html#hardware" title="Permalink to this headline">¶</a></h2>
+<p>At the centre of the board, we had a PIC 18F4450 microcontroller. The PIC
+was preprogrammed with a bootloader, which enabled programs to be loaded
+using only a USB cable.</p>
+<p>Five IR diode/photodiode pairs were used to detect a line. Sensitivity
+could be adjusted using a potentiometer to set a comparator treshold voltage.</p>
+<p>Two DC motors were driven by an L298 dual full-bridge driver IC. By pulling
+the inputs low or high, one can make motors spin forward or backwards.
+Turning left or right is done by spinning one of the wheels (slow turn),
+or by making them spin in different directions (fast turn).</p>
+<p>Six on-board LEDs were used for debugging and as a User Interface.</p>
+</div>
+<div class="section" id="firmware">
+<h2>Firmware<a class="headerlink" href="robot-firmware.html#firmware" title="Permalink to this headline">¶</a></h2>
+<p>The programming was done using MPLAB IDE and C18 compiler. Driver software,
+provided by Microchip, was used to load hex files onto the microcontroller.</p>
+<p>On top of fulfilling the objectives, a simple menu system was implemented.
+Using on-board switches and LED feedback, user could select one of the six
+different modes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Idle - to do nothing, flash LEDs</li>
+<li>Test - to output data from sensors to LEDs</li>
+<li>Normal - to follow the line</li>
+<li>Ramp - to go over the ramp</li>
+<li>Memorise - to memorise and replay</li>
+<li>Mode selection - this is the mode which is active until one of the above modes is confirmed</li>
+</ul>
+</div></blockquote>
+<p>Here is a short video of a test run as home:</p>
+<object width="425" height="344">
+    <param name="movie" value="http://www.youtube.com/v/zx5pg2UBwsE&amp;hl=en&amp;fs=1"></param>
+    <param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param>
+    <embed src="http://www.youtube.com/v/zx5pg2UBwsE&amp;hl=en&amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed>
+</object><div class="figure">
+<img alt="http://lh4.ggpht.com/_is7PcgDfyqQ/Sh7x2mAbmcI/AAAAAAAAA50/oIXp8rZj8No/s400/ESAP_final_day-01.jpg" src="http://lh4.ggpht.com/_is7PcgDfyqQ/Sh7x2mAbmcI/AAAAAAAAA50/oIXp8rZj8No/s400/ESAP_final_day-01.jpg" />
+<p class="caption">Track setup</p>
+</div>
+</div>
+<div class="section" id="links">
+<h2>Links<a class="headerlink" href="robot-firmware.html#links" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="robot-source.html">Source code</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="robot-firmware.html#">Line-following robot (firmware)</a><ul>
+<li><a class="reference internal" href="robot-firmware.html#hardware">Hardware</a></li>
+<li><a class="reference internal" href="robot-firmware.html#firmware">Firmware</a></li>
+<li><a class="reference internal" href="robot-firmware.html#links">Links</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="7seg-plugin.html"
+                        title="previous chapter">7-segment LED display for Spartan-3E dev board</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="robot-source.html"
+                        title="next chapter">Line-following robot (firmware): source code</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/robot-firmware.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="https://armandas.lt/projects/search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="robot-source.html" title="Line-following robot (firmware): source code"
+             >next</a></li>
+        <li class="right" >
+          <a href="7seg-plugin.html" title="7-segment LED display for Spartan-3E dev board"
+             >previous</a> |</li>
+        <li><a href="index.html">Armandas’s projects</a> &raquo;</li>
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Armandas Jarušauskas.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

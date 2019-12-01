@@ -1,0 +1,60 @@
+.. _pic-devboard:
+
+PIC Prototyping Board
+=====================
+
+:date: August 1, 2010
+
+.. raw:: html
+
+   <p>
+       <a href="http://picasaweb.google.com/lh/photo/9mj8qrYEJs6wfesOlkQQTg?feat=embedwebsite">
+           <img src="http://lh6.ggpht.com/_is7PcgDfyqQ/TLrBSrVVHvI/AAAAAAAABgM/jTnpW8utikI/s400/DSC_0005.JPG" alt="PIC prototyping board" />
+       </a>
+   </p>
+
+Designing a simple microcontroller prototyping board has been on my TODO
+list for while now. With my new :ref:`PCB Fab Lab<pcb-exposure-box>`
+established, I was finally able to start the project.
+
+Design
+------
+
+The design was focused on producing as small a board as possible. The board
+had to faciliate programming and smooth operation of the microcontroller,
+while keeping most of the I/O pins available for use.
+
+Even though the board is simple, routing consumed quite a bit of time. The
+main reason for this was that the design was restricted to a single layer.
+
+The board uses a PIC18F4550 microcontroller. USB socket is used for power
+as well as programming (bootloader required). DPDT switch allows to choose
+the source of power - USB or external.
+
+Here is a 3D image of the board, rendered during development.
+
+.. image:: static/pic_3d.png
+
+Results
+-------
+
+Here is a video of a test run:
+
+.. raw:: html
+
+   <object width="480" height="385">
+       <param name="movie" value="http://www.youtube.com/v/gRn0jy3gLeE&amp;hl=en_GB&amp;fs=1?rel=0"></param>
+       <param name="allowFullScreen" value="true"></param>
+       <param name="allowscriptaccess" value="always"></param>
+       <embed src="http://www.youtube.com/v/gRn0jy3gLeE&amp;hl=en_GB&amp;fs=1?rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed>
+   </object>
+   <br />
+
+.. figure:: static/pic_dev.jpg
+
+   The board next to a PICkit 3
+
+Links
+-----
+   * `Schematic diagram <static/devboard.pdf>`_
+   * `PCB layout <static/devboard_pcb.pdf>`_

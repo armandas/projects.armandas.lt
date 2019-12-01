@@ -1,0 +1,97 @@
+.. _third-year-project:
+
+FPGA Based VGA Driver and Arcade Game
+=====================================
+
+:date: March 7, 2010
+
+During the third year at the university, students were doing their
+individual projects. Learning about FPGAs was on my TODO list, so I decided
+to propose my own project.
+
+After some consultation with PhD students and a lecturer a topic was chosen:
+VGA driver and an arcade game.
+
+.. image:: static/arcade.gif
+
+Pong
+----
+
+.. raw:: html
+
+   <object width="480" height="385">
+       <param name="movie" value="http://www.youtube.com/v/IBhdHHIXBtY&amp;hl=en_GB&fs=1&amp;color1=0x2b405b&amp;color2=0x6b8ab6"></param>
+       <param name="allowFullScreen" value="true"></param>
+       <param name="allowscriptaccess" value="always"></param>
+       <embed src="http://www.youtube.com/v/IBhdHHIXBtY&amp;hl=en_GB&fs=1&amp;color1=0x2b405b&amp;color2=0x6b8ab6" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed>
+   </object>
+
+The project was started with an implementation of the classic Pong game.
+The development of this game was pretty much a learning exercise and was
+deliberately kept simple.
+
+Main features:
+
+   * Two player game
+   * Ball acceleration
+   * Score display and winner announcement
+   * Audio feedback
+
+Space shooter
+-------------
+
+For the second part of the project, a space-shooter game was chosen. This
+time, the majority of effort was put to technical the side of the game. The
+following features were added:
+
+   * Coloured and animated graphics
+   * Multi-tone sound generator
+   * NES controller interface
+   * Binary-to-BCD converter
+   * etc.
+
+.. image:: http://farm3.static.flickr.com/2780/4412904401_de070b471c.jpg
+
+The gameplay is quite simple. User controls the spaceship at the bottom.
+Aliens arrive in three rows, weakest at the front. Third level aliens can
+turn invisible and avoid missiles.
+
+Nintendo controller interface
+-----------------------------
+
+I wanted to have some custom built hardware that I could interface to with
+the FPGA. At first, I thought I will build a controller, but in the end I
+decided that an old NES gamepad would look much better.
+
+Since the FPGA can handle 3.3V at most, and the gamepads need 5V, a logic
+level shifter was needed. For this purpose I decided to design a PCB.
+
+The conversion from 3.3V to 5V and from 5V to 3.3V is done by 74HCT4066 and
+74LCX125 respectively. NES sockets are hard to come by, so we had to buy a
+2-to-4 expander and scavenge the ports from it. A reset button and piezoelectric
+buzzer were also added to the board, which is connected to the development
+board using a Hirose FX2 expansion header.
+
+More details, including schematic and board layout can be found in the
+dissertation.
+
+.. raw:: html
+
+   <p>
+       <a href="http://www.flickr.com/photos/armandas/4276602049/" title="NES adapter for Spartan-3E dev board by Armandas, on Flickr">
+           <img src="http://farm5.static.flickr.com/4067/4276602049_e12c061f24.jpg" width="500" height="333" alt="NES adapter for Spartan-3E dev board">
+       </a>
+   </p>
+
+.. figure:: static/adaptor.jpg
+
+   Final adaptor board
+
+Links
+-----
+
+   * Dissertation: http://static/res/fpga_based_vga_driver_and_arcade_game.pdf
+   * Source
+      * Whole project: http://github.com/armandas/Arcade
+      * Pong: http://github.com/armandas/Plong
+      * Space shooter: http://github.com/armandas/FPGalaxy

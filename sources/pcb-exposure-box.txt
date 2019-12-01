@@ -1,0 +1,81 @@
+.. _pcb-exposure-box:
+
+PCB Exposure Box
+================
+
+:date: June 10, 2010
+
+.. raw:: html
+
+   <p>
+       <a href="http://www.flickr.com/photos/armandas/4689191648/" title="PCB Exposure box by Armandas, on Flickr">
+           <img src="http://farm5.static.flickr.com/4035/4689191648_505338dc8b.jpg" width="500" height="333" alt="PCB Exposure box">
+       </a>
+   </p>
+
+This summer I finaly decided to start making my own PCBs. The preferred
+method for making PCBs at home is photolithography. The PCBs used have a
+layer of photo resist, which is exposed to a source of light through a mask.
+The exposed areas are then removed using a special developer chemical.
+Lastly, the PCB is dipped into the etchant and the copper is removed from
+the areas unprotected by the photoresist.
+
+The first thing I needed was a light source. I decided to build a small box
+for exposing my PCBs.
+
+3D modeling
+-----------
+
+I began by creating a 3D model of the box usign Google Sketchup. This
+allowed me to spot any mistakes and tailor the design to suit my needs.
+
+.. image:: static/exposure-box-model.png
+
+Bill of materials
+-----------------
+
+I used the following parts to make this box:
+
+   * Chipboard
+   * Plexiglass for the window
+   * Fluorescent lamp
+   * Reflector from some old lamp
+   * IEC socket and cable
+   * Power switch
+   * Latch
+   * Pair of hinges
+   * Sponge cloth
+   * Screws, glue
+
+Results
+-------
+
+Below is the picture of a test PCB. The safe limit of track width seems
+to be around 0.2-0.25mm. This could be influenced by the source of light.
+While experimenting with the timing, I got an impression that UV light
+could do a better job as it would allow reduced exposure times.
+
+.. raw:: html
+
+   <p>
+       <a href="http://picasaweb.google.com/lh/photo/F72CrDlzytrvC3T4mxqYwg?feat=embedwebsite">
+           <img src="http://lh6.ggpht.com/_is7PcgDfyqQ/TByx6jpL3RI/AAAAAAAABZ4/MjMzVZcFPQw/s400/pcb_test_1.jpg" alt="PCB test">
+       </a>
+   </p>
+
+
+Track widths from top to bottom are:
+
+   #. 1.27mm
+   #. 0.64mm
+   #. 0.38mm
+   #. 0.25mm
+   #. 0.20mm
+   #. 0.15mm
+   #. 0.10mm
+
+Links
+-----
+
+   * `Mike's article on PCB making at electricstuff.co.uk <http://www.electricstuff.co.uk/pcbs.html>`_
+   * `A slightly more detailed picture of the box <http://picasaweb.google.com/jarusauskas/Stuff#5481253467338333426>`_

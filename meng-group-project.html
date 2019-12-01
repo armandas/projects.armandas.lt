@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Small-scale Biofuel Production &mdash; Armandas’s projects</title>
+
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="shortcut icon" href="static/c.ico"/>
+    <link rel="top" title="Armandas’s projects" href="index.html" />
+    <link rel="next" title="HD44780 LCD driver library for PIC18 microcontrollers" href="lcd-library.html" />
+    <link rel="prev" title="Project website" href="index.html" />
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="lcd-library.html" title="HD44780 LCD driver library for PIC18 microcontrollers"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="index.html" title="Project website"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Armandas’s projects</a> &raquo;</li>
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+
+  <div class="section" id="small-scale-biofuel-production">
+<span id="meng-group-project"></span><h1>Small-scale Biofuel Production<a class="headerlink" href="meng-group-project.html#small-scale-biofuel-production" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">date:</th><td class="field-body">May 4, 2011</td>
+</tr>
+</tbody>
+</table>
+<img alt="images/title_pcb.jpg" src="images/title_pcb.jpg" />
+<p>MEng students at Sussex do group projects of their choice. Our group chose
+to work on a Small-scale Biofuel Production unit, that converts organic
+household waste to bio-ethanol. The group was formed of four students - two
+electronic and two mechanical engineers.</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="meng-group-project.html#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The Small-scale biofuel production project has been running since 2008, and our
+group was the third one to work on this project. The running-goal is to design
+a unit that can convert biodegradable municipal waste to ethanol efficiently
+and with minimum human intervention.</p>
+<p>While the previous groups focused on producing ethanol at the end of the year,
+our group decided that this time most of the work should be done on designing
+and building a biofuel production unit, that could be further improved by the
+future groups. This decision was mainly influenced by the number of flaws in
+the previous design.</p>
+<p>This document will focus on electronics/control system design and only touch
+on electrical and mechanical parts of the projetc. Full details are provided
+in the dissertation, which can be downloaded in PDF format. The links are
+provided at the bottom of this page.</p>
+</div>
+<div class="section" id="control-board">
+<h2>Control board<a class="headerlink" href="meng-group-project.html#control-board" title="Permalink to this headline">¶</a></h2>
+<p>The control board was designed to replace the mess of veroboards, wires and
+blue-tack that was left to us by the previous group. The board contains most
+of the circuitry that is required to control a biofuel production process.</p>
+<dl class="docutils">
+<dt>The main reatures of the control board are:</dt>
+<dd><ul class="first last simple">
+<li>Power supply circuitry with a maximum input voltage of 34 volts</li>
+<li>PIC18F66K22 microcontroller with a 16MHz crystal</li>
+<li>Five thermocouple channels for temperature measurement</li>
+<li>Seven open-drain outputs for driving optocouplers (electrical interface)</li>
+<li>HD44780-compatible LCD and four-button keypad interfaces</li>
+<li>Real time clock with an external 32.768kHz crystal</li>
+<li>microSD card slot wired for SPI communication</li>
+</ul>
+</dd>
+</dl>
+<p>The schematic and PCB design was done using Altium Designer. The design files
+can be downloaded from the links at the bottom of this page.</p>
+<div class="figure">
+<img alt="images/board.png" src="images/board.png" />
+<p class="caption">Layout of the control board.</p>
+</div>
+</div>
+<div class="section" id="keyboard-pcb">
+<h2>Keyboard PCB<a class="headerlink" href="meng-group-project.html#keyboard-pcb" title="Permalink to this headline">¶</a></h2>
+<p>The user interface of the control system consists of two parts: an LCD and
+a keyboard. The LCD is a standard 4x20 character display with
+HD44780-compatible controller. The keyboard is just four tactile switches
+mounted on a PCB.</p>
+<p>The design of the keyboard PCB is very simple so it was made at home
+using a DIY <a class="reference internal" href="pcb-exposure-box.html#pcb-exposure-box"><em>PCB Exposure Box</em></a> and some chemicals.</p>
+<p>Below is the picture of the PCB with the SMT components soldered on.</p>
+<img alt="images/keyboard.png" src="images/keyboard.png" />
+</div>
+<div class="section" id="enclosure-of-the-control-system">
+<h2>Enclosure of the control system<a class="headerlink" href="meng-group-project.html#enclosure-of-the-control-system" title="Permalink to this headline">¶</a></h2>
+<p>To make the product look more complete, an enclosure is required. The
+control system will contain the main control PCB, an LCD and a keyboard.
+These components will be hosted in a specially prepared box.</p>
+<p>It was decided that a metal chassis will be used to mount the PCBs, while the
+chassis itself will be fixed to the box. The reasons for using a chassis are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Tidier, more compact arrangement inside the box. Were the chassis not
+used, the main PCB would have to be mounted to the back of the box,
+making the maintenance more awkward.</li>
+<li>Conductive chassis improves electrical and EMC performance of the
+system, as described in <a class="footnote-reference" href="meng-group-project.html#id2" id="id1">[1]</a>.</li>
+</ol>
+</div></blockquote>
+<p>Based on the dimensions of the LCD and the keyboard, an off-the-shelf box
+was chosen. The metal cover from an old CD player was used as a source
+material for the chassis. A rectangular plate was cut out using a Dremel hand
+tool and cutting discs.</p>
+<img alt="images/player_cover.jpg" src="images/player_cover.jpg" />
+<p>The picture below shows a finished chassis, after the edges have been filed,
+paint sanded-off, screw holes drilled and cable connector slots cut.</p>
+<img alt="images/chassis.jpg" src="images/chassis.jpg" />
+<img alt="images/pcbs_mounted.jpg" src="images/pcbs_mounted.jpg" />
+<p>After the LCD and the keyboard were mounted on the chassis, appropriate holes
+could be cut in the box. Below, you can see how the front and the inside of
+the enclosure look like.</p>
+<img alt="images/enclosure_front.jpg" src="images/enclosure_front.jpg" />
+<img alt="images/enclosure_back.jpg" src="images/enclosure_back.jpg" />
+</div>
+<div class="section" id="firmware">
+<h2>Firmware<a class="headerlink" href="meng-group-project.html#firmware" title="Permalink to this headline">¶</a></h2>
+<p>Rewriting the firmware was also a significant part of the control system
+design. The previous group had their firmware developed in assembly, but due
+to lack of documentation and general readability of the code, it was decided
+that the firmware should be re-developed in C. As a result, a simple framework
+that enables developers to utilise most of the hardware, was developed. The
+code base contains functions for interfacing to the ADC and temperature
+measurement circuitry, LCD and keypad support, control of electrical devices
+and so on.</p>
+<p>The code can be downloaded from the links at the bottom of this page.</p>
+</div>
+<div class="section" id="electrical-system">
+<h2>Electrical system<a class="headerlink" href="meng-group-project.html#electrical-system" title="Permalink to this headline">¶</a></h2>
+<p>My colleague was responsible for the electrical part of the project. The
+control unit interfaces to the electrical system in order to control various
+electrical and electromechanical parts. The two systems are galvanically
+isolated using optocouplers.</p>
+<p>The major part of the electrical side is made of switching devices: relays and
+TRIACs. Relays are used to control motors and solenoid valves, while heaters
+are controlled by TRIACs. The electrical system also implements a zero-crossing
+detector which generates a pulse on every zero crossing of the mains voltage.
+This enables the control system to precisely adjust the power applied to the
+heaters using a phase-fired control method.</p>
+<p>More details on the electrical design can be found in the project report.</p>
+</div>
+<div class="section" id="mechanical-part">
+<h2>Mechanical part<a class="headerlink" href="meng-group-project.html#mechanical-part" title="Permalink to this headline">¶</a></h2>
+<p>The mechanical construction is shown below. More details on the mechanical and
+structural design can be found in the dissertation. High resolution pictures
+are available in the photo gallery.</p>
+<img alt="images/rig.jpg" src="images/rig.jpg" />
+</div>
+<div class="section" id="links">
+<h2>Links<a class="headerlink" href="meng-group-project.html#links" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Dissertation: <a class="reference external" href="../static/res/small_scale_biofuel_production.pdf">http://static/res/small_scale_biofuel_production.pdf</a> [9.7MB]</li>
+<li>Documentation of the control board: <a class="reference external" href="../static/res/ssbp_process_control_unit.pdf">http://static/res/ssbp_process_control_unit.pdf</a> [7.9MB]</li>
+<li>Project files: <a class="reference external" href="https://github.com/armandas/Small-Scale-Biofuel-Production">https://github.com/armandas/Small-Scale-Biofuel-Production</a></li>
+<li>Photo gallery: <a class="reference external" href="http://www.flickr.com/photos/armandas/tags/smallscalebiofuelproduction/">http://www.flickr.com/photos/armandas/tags/smallscalebiofuelproduction/</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="meng-group-project.html#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="meng-group-project.html#id1">[1]</a></td><td><a class="reference external" href="http://www.compliance-club.com/Article.aspx?artid=90">Advanced PCB design and layout for EMC. Part 3 – PCB-to-chassis bonding</a>.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="meng-group-project.html#">Small-scale Biofuel Production</a><ul>
+<li><a class="reference internal" href="meng-group-project.html#introduction">Introduction</a></li>
+<li><a class="reference internal" href="meng-group-project.html#control-board">Control board</a></li>
+<li><a class="reference internal" href="meng-group-project.html#keyboard-pcb">Keyboard PCB</a></li>
+<li><a class="reference internal" href="meng-group-project.html#enclosure-of-the-control-system">Enclosure of the control system</a></li>
+<li><a class="reference internal" href="meng-group-project.html#firmware">Firmware</a></li>
+<li><a class="reference internal" href="meng-group-project.html#electrical-system">Electrical system</a></li>
+<li><a class="reference internal" href="meng-group-project.html#mechanical-part">Mechanical part</a></li>
+<li><a class="reference internal" href="meng-group-project.html#links">Links</a></li>
+<li><a class="reference internal" href="meng-group-project.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Project website</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="lcd-library.html"
+                        title="next chapter">HD44780 LCD driver library for PIC18 microcontrollers</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/meng-group-project.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="https://armandas.lt/projects/search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="lcd-library.html" title="HD44780 LCD driver library for PIC18 microcontrollers"
+             >next</a></li>
+        <li class="right" >
+          <a href="index.html" title="Project website"
+             >previous</a> |</li>
+        <li><a href="index.html">Armandas’s projects</a> &raquo;</li>
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Armandas Jarušauskas.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

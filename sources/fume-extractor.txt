@@ -1,0 +1,26 @@
+.. _fume-extractor:
+
+Fume extractor
+==============
+
+:date: August 7, 2009
+
+Ever since I got my first soldering iron, I was thinking about a fume
+extractor. One week I got most of the parts that I needed to build one
+and so this project was born.
+
+.. image:: http://farm3.static.flickr.com/2619/3797968053_71fb594132.jpg
+
+The box is made of honeycomb cardboard, which is strong, but lightweight.
+The fan is a standard computer cooler rated at 10V 150mA. Power supply
+outputs 14V, 1.2A, current is limited by a 100-ohm resistor.
+
+The flexible pipe is attached using a pair of neodymium magnets and can be
+stored in the box when not in use:
+
+.. image:: http://farm3.static.flickr.com/2620/3798786300_7bb2af5c6c.jpg
+
+Links
+-----
+
+   * More pictures are available on `my flickr page <http://www.flickr.com/photos/armandas/tags/fumeextractor/>`_.

@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Line-following robot (firmware): source code &mdash; Armandas’s projects</title>
+
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="shortcut icon" href="static/c.ico"/>
+    <link rel="top" title="Armandas’s projects" href="index.html" />
+    <link rel="up" title="Line-following robot (firmware)" href="robot-firmware.html" />
+    <link rel="prev" title="Line-following robot (firmware)" href="robot-firmware.html" />
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="robot-firmware.html" title="Line-following robot (firmware)"
+             accesskey="P">previous</a></li>
+        <li><a href="index.html">Armandas’s projects</a> &raquo;</li>
+          <li><a href="robot-firmware.html" accesskey="U">Line-following robot (firmware)</a> &raquo;</li>
+      </ul>
+    </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+
+  <div class="section" id="line-following-robot-firmware-source-code">
+<span id="robot-source"></span><h1>Line-following robot (firmware): source code<a class="headerlink" href="robot-source.html#line-following-robot-firmware-source-code" title="Permalink to this headline">¶</a></h1>
+<p>Return to <a class="reference internal" href="robot-firmware.html#robot-firmware"><em>project description</em></a>.</p>
+<div class="section" id="download">
+<h2>Download<a class="headerlink" href="robot-source.html#download" title="Permalink to this headline">¶</a></h2>
+<p>Download source: <a class="reference external" href="static/robot.c">robot.c</a>.</p>
+</div>
+<div class="section" id="id1">
+<h2>robot.c<a class="headerlink" href="robot-source.html#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#include &lt;p18f4450.h&gt;</span>
+<span class="cp">#include &lt;delays.h&gt;</span>
+
+<span class="cp">#pragma config WDT = OFF</span>
+<span class="cp">#pragma config PLLDIV = 5  </span>
+<span class="cp">#pragma config CPUDIV = OSC3_PLL4</span>
+<span class="cp">#pragma config USBDIV = 2</span>
+<span class="cp">#pragma config FOSC = HSPLL_HS</span>
+<span class="cp">#pragma config BOR = OFF </span>
+<span class="cp">#pragma config PBADEN = OFF</span>
+<span class="cp">#pragma config PWRT = OFF</span>
+<span class="cp">#pragma config MCLRE = OFF </span>
+<span class="cp">#pragma config XINST = OFF</span>
+
+<span class="c1">// ---------------------- function defs -------------------------- //</span>
+<span class="kt">void</span> <span class="n">HighPriorityISRCode</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">LowPriorityISRCode</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">void</span> <span class="n">_startup</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>        <span class="c1">// See c018i.c in C18 compiler dir</span>
+
+<span class="cp">// --------------------- Vector Remapping -------------------------//</span>
+<span class="cp">#define REMAPPED_RESET_VECTOR_ADDRESS			0x1000</span>
+<span class="cp">#define REMAPPED_HIGH_INTERRUPT_VECTOR_ADDRESS	0x1008</span>
+<span class="cp">#define REMAPPED_LOW_INTERRUPT_VECTOR_ADDRESS	0x1018</span>
+
+<span class="cp">#pragma code REMAPPED_RESET_VECTOR = REMAPPED_RESET_VECTOR_ADDRESS</span>
+<span class="kt">void</span> <span class="nf">_reset</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">_asm</span> <span class="k">goto</span> <span class="n">_startup</span> <span class="n">_endasm</span>
+<span class="p">}</span>
+<span class="cp">#pragma code REMAPPED_HIGH_INTERRUPT_VECTOR = REMAPPED_HIGH_INTERRUPT_VECTOR_ADDRESS</span>
+<span class="kt">void</span> <span class="nf">Remapped_High_ISR</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">_asm</span> <span class="k">goto</span> <span class="n">HighPriorityISRCode</span> <span class="n">_endasm</span>
+<span class="p">}</span>
+<span class="cp">#pragma code REMAPPED_LOW_INTERRUPT_VECTOR = REMAPPED_LOW_INTERRUPT_VECTOR_ADDRESS</span>
+<span class="kt">void</span> <span class="nf">Remapped_Low_ISR</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">_asm</span> <span class="k">goto</span> <span class="n">LowPriorityISRCode</span> <span class="n">_endasm</span>
+<span class="p">}</span>
+<span class="cp">#pragma code</span>
+
+<span class="cp">//---------------------- Interrupt Handlers ----------------------//</span>
+
+<span class="cp">#pragma interrupt HighPriorityISRCode</span>
+<span class="kt">void</span> <span class="n">HighPriorityISRCode</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+<span class="c1">// This space deliberately left blank :) </span>
+<span class="p">}</span>
+<span class="cp">	</span>
+<span class="cp">#pragma interruptlow LowPriorityISRCode</span>
+<span class="kt">void</span> <span class="n">LowPriorityISRCode</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+<span class="c1">// This space deliberately left blank :) </span>
+<span class="p">}</span>
+<span class="cp">#pragma code</span>
+
+<span class="cp">//-------------------------Main Code -------------------------------//</span>
+
+<span class="cp">// movement definitions</span>
+<span class="cp">#define FORWARD    0b0101</span>
+<span class="cp">#define REVERSE    0b1010</span>
+<span class="cp">#define STOP       0b0000</span>
+<span class="cp">#define SLOW_LEFT  0b0001</span>
+<span class="cp">#define FAST_LEFT  0b1001</span>
+<span class="cp">#define SLOW_RIGHT 0b0100</span>
+<span class="cp">#define FAST_RIGHT 0b0110</span>
+
+<span class="cp">// definition of modes</span>
+<span class="cp">#define IDLE      1</span>
+<span class="cp">#define TEST      2</span>
+<span class="cp">#define NORMAL    4</span>
+<span class="cp">#define RAMP      8</span>
+<span class="cp">#define MEMORISE 16</span>
+<span class="cp">#define MODE_SEL 32</span>
+
+<span class="cp">#define MEM_SIZE 100</span>
+<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">mem</span><span class="p">[</span><span class="n">MEM_SIZE</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">mem_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// enters mode selection mode if button RD6 is pressed</span>
+<span class="kt">void</span> <span class="nf">check_mode_sel</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">mode</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">PORTDbits</span><span class="p">.</span><span class="n">RD6</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">mode</span> <span class="o">=</span> <span class="n">MODE_SEL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// mode selection</span>
+<span class="kt">void</span> <span class="nf">choose_mode</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">mode</span><span class="p">,</span>
+                 <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">delta_mode</span><span class="p">,</span>
+                 <span class="kt">int</span> <span class="o">*</span><span class="n">mode_timeout</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// check if button has not been</span>
+    <span class="c1">// pressed for some time</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">mode_timeout</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// indicate timeout by lighting up LEDs</span>
+        <span class="n">LATA</span> <span class="o">=</span> <span class="mh">0xff</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+
+        <span class="c1">// confirm chosen mode</span>
+        <span class="o">*</span><span class="n">mode</span> <span class="o">=</span> <span class="o">*</span><span class="n">delta_mode</span><span class="p">;</span>
+        <span class="c1">// indicate selected mode</span>
+        <span class="n">LATA</span> <span class="o">=</span> <span class="o">*</span><span class="n">mode</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+
+        <span class="c1">// restore temporary variables</span>
+        <span class="o">*</span><span class="n">delta_mode</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="o">*</span><span class="n">mode_timeout</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// if timeout has not yet occured</span>
+    <span class="c1">// wait for input from the user</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// if button is pressed</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">PORTDbits</span><span class="p">.</span><span class="n">RD6</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// reset timeout counter</span>
+            <span class="o">*</span><span class="n">mode_timeout</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+            <span class="c1">// we got 5 modes, and need to start</span>
+            <span class="c1">// from the beggining after 5th</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">delta_mode</span> <span class="o">==</span> <span class="mi">32</span><span class="p">)</span>
+                <span class="o">*</span><span class="n">delta_mode</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="c1">// if not yet at 5, choose next mode</span>
+            <span class="k">else</span>
+                <span class="o">*</span><span class="n">delta_mode</span> <span class="o">=</span> <span class="o">*</span><span class="n">delta_mode</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+
+            <span class="c1">// show mode number</span>
+            <span class="n">LATA</span> <span class="o">=</span> <span class="o">*</span><span class="n">delta_mode</span><span class="p">;</span>
+            <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="c1">// if button is not pressed</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// increase timeout counter</span>
+            <span class="p">(</span><span class="o">*</span><span class="n">mode_timeout</span><span class="p">)</span><span class="o">++</span><span class="p">;</span>
+            <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// LED effects for IDLE mode</span>
+<span class="kt">void</span> <span class="nf">kitt</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">th</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">th_dir</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">th</span> <span class="o">&gt;</span> <span class="mi">31</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">th_dir</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">th</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">th_dir</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">th_dir</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">th</span> <span class="o">=</span> <span class="o">*</span><span class="n">th</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">LATA</span> <span class="o">=</span> <span class="o">*</span><span class="n">th</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">230</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">th</span> <span class="o">=</span> <span class="o">*</span><span class="n">th</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">LATA</span> <span class="o">=</span> <span class="o">*</span><span class="n">th</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">230</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// main function for following the line</span>
+<span class="kt">unsigned</span> <span class="kt">char</span> <span class="nf">go</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">back_counter</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">out</span><span class="p">)</span>
+<span class="p">{</span>
+
+    <span class="c1">// stops in the pit-stop</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">PORTD</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">b00011111</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="n">b00011111</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">STOP</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">STOP</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">PORTD</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">b00000001</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">FAST_RIGHT</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">FAST_RIGHT</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">PORTD</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">b00010000</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">FAST_LEFT</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">FAST_LEFT</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">PORTD</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">b00000010</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">SLOW_RIGHT</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">SLOW_RIGHT</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">PORTD</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">b00001000</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">SLOW_LEFT</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">SLOW_LEFT</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">PORTD</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">b00000100</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">FORWARD</span><span class="p">;</span>
+        <span class="c1">// when line is found, reset counter</span>
+        <span class="c1">// see below for details</span>
+        <span class="o">*</span><span class="n">back_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">FORWARD</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// if no black line is detected</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// do not move backwards immediately</span>
+        <span class="k">if</span> <span class="p">((</span><span class="o">*</span><span class="n">back_counter</span><span class="p">)</span><span class="o">++</span> <span class="o">&lt;</span> <span class="mi">2000</span><span class="p">)</span>
+            <span class="c1">// this could probably benefit from</span>
+            <span class="c1">// moving forwards</span>
+            <span class="k">return</span> <span class="mh">0xff</span><span class="p">;</span>
+
+        <span class="c1">// go backwards if no line is found</span>
+        <span class="c1">// after some time</span>
+        <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">REVERSE</span><span class="p">;</span>
+        <span class="n">Delay1KTCYx</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+        <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">STOP</span><span class="p">;</span>
+        <span class="n">Delay1KTCYx</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// function for going over the ramp</span>
+<span class="c1">// utilizes only the side sensors</span>
+<span class="c1">// also uses delays to move slower</span>
+<span class="kt">void</span> <span class="nf">go_ramp</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">PORTD</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">b00000001</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">LATB</span> <span class="o">=</span> <span class="n">FAST_LEFT</span><span class="p">;</span>
+        <span class="n">Delay1KTCYx</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">PORTD</span> <span class="o">&amp;</span> <span class="mi">0</span><span class="n">b00010000</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">LATB</span> <span class="o">=</span> <span class="n">FAST_RIGHT</span><span class="p">;</span>
+        <span class="n">Delay1KTCYx</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="n">LATB</span> <span class="o">=</span> <span class="n">FORWARD</span><span class="p">;</span>
+        <span class="n">Delay1KTCYx</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">LATB</span> <span class="o">=</span> <span class="n">STOP</span><span class="p">;</span>
+    <span class="n">Delay1KTCYx</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// function for memorising the track</span>
+<span class="c1">// uses small array stored in ram</span>
+<span class="c1">// cannot memorise whole track</span>
+<span class="c1">// proof of concept only</span>
+<span class="kt">void</span> <span class="nf">memorise</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">back_counter</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">mem_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">dir</span> <span class="o">=</span> <span class="mh">0xff</span><span class="p">;</span>
+
+    <span class="c1">// indication of start</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">LATA</span> <span class="o">=</span> <span class="mh">0xff</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+        <span class="n">LATA</span> <span class="o">=</span> <span class="mh">0x00</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// learn the track</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MEM_SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">dir</span> <span class="o">=</span> <span class="n">go</span><span class="p">(</span><span class="n">back_counter</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">LATB</span><span class="p">);</span>
+        <span class="c1">// skip data if track is lost</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dir</span> <span class="o">==</span> <span class="mh">0xff</span><span class="p">)</span>
+           <span class="k">continue</span><span class="p">;</span>
+
+        <span class="c1">//put direction into array</span>
+        <span class="n">mem</span><span class="p">[</span><span class="n">mem_count</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">dir</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">LATB</span> <span class="o">=</span> <span class="n">STOP</span><span class="p">;</span>
+    <span class="c1">// indication of finish</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">LATA</span> <span class="o">=</span> <span class="mh">0xff</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+        <span class="n">LATA</span> <span class="o">=</span> <span class="mh">0x00</span><span class="p">;</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// replay the track</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MEM_SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">LATB</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">Delay10KTCYx</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">LATB</span> <span class="o">=</span> <span class="n">STOP</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">IDLE</span><span class="p">;</span>
+
+    <span class="c1">// variables for the idle mode</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">throbber</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">th_direction</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="c1">// variables for mode selection</span>
+    <span class="kt">int</span> <span class="n">mode_timeout</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">delta_mode</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">back_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">TRISA</span> <span class="o">=</span> <span class="mh">0x00</span><span class="p">;</span>       <span class="c1">// set PORTA as output port (LEDs)</span>
+    <span class="n">TRISB</span> <span class="o">=</span> <span class="mh">0xf0</span><span class="p">;</span>       <span class="c1">// set PORTB as output port (Motors)</span>
+    <span class="n">TRISD</span> <span class="o">=</span> <span class="mi">0</span><span class="n">b00111111</span><span class="p">;</span> <span class="c1">// set PORTD as input port  (Sensors)</span>
+
+    <span class="n">LATB</span> <span class="o">=</span> <span class="n">STOP</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">check_mode_sel</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mode</span><span class="p">);</span>
+
+        <span class="k">switch</span> <span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">IDLE</span>:
+                <span class="n">kitt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">throbber</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">th_direction</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+
+            <span class="k">case</span> <span class="n">TEST</span>:
+                <span class="n">LATA</span> <span class="o">=</span> <span class="n">PORTD</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+
+            <span class="k">case</span> <span class="n">NORMAL</span>:
+                <span class="n">go</span><span class="p">(</span><span class="o">&amp;</span><span class="n">back_counter</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">LATB</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+
+            <span class="k">case</span> <span class="n">RAMP</span>:
+                <span class="n">go_ramp</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+
+            <span class="k">case</span> <span class="n">MEMORISE</span>:
+                <span class="n">memorise</span><span class="p">(</span><span class="o">&amp;</span><span class="n">back_counter</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+
+            <span class="k">case</span> <span class="n">MODE_SEL</span>:
+                <span class="n">choose_mode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mode</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">delta_mode</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">mode_timeout</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="robot-source.html#">Line-following robot (firmware): source code</a><ul>
+<li><a class="reference internal" href="robot-source.html#download">Download</a></li>
+<li><a class="reference internal" href="robot-source.html#id1">robot.c</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="robot-firmware.html"
+                        title="previous chapter">Line-following robot (firmware)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/robot-source.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="https://armandas.lt/projects/search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="robot-firmware.html" title="Line-following robot (firmware)"
+             >previous</a></li>
+        <li><a href="index.html">Armandas’s projects</a> &raquo;</li>
+          <li><a href="robot-firmware.html" >Line-following robot (firmware)</a> &raquo;</li>
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Armandas Jarušauskas.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

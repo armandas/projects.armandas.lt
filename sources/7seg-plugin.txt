@@ -1,0 +1,24 @@
+.. _7seg-plugin:
+
+7-segment LED display for Spartan-3E dev board
+==============================================
+
+:date: July 17, 2009
+
+During the preparation for my :ref:`third year project <third-year-project>`
+I was playing around with the Xilinx Spartan-3E development board. The book
+I used had some application examples for 7-segment displays, which were not
+available on the S3E board. I had some of these LED displays in my parts box
+and decided to build a plugin (picture below).
+
+.. image:: http://lh6.ggpht.com/_is7PcgDfyqQ/SmB_mRwEiOI/AAAAAAAABBY/AgBVEM43CQk/s400/DSC_0058.JPG
+
+The displays are multiplexed in order to reduce the number of I/O pins used.
+
+.. raw:: html
+
+   <p>
+       <a href="http://picasaweb.google.com/lh/photo/-35Om_Qeonk-FY1NiykZ1Q?feat=embedwebsite">
+           <img src="http://lh6.ggpht.com/_is7PcgDfyqQ/SmB_meEAjaI/AAAAAAAABBc/V-36lXMJo_I/s400/collage.jpg" />
+       </a>
+   </p>
